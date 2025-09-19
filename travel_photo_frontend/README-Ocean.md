@@ -7,7 +7,8 @@ This React app implements:
 - Ocean Professional theme (blue primary, amber secondary, rounded corners, soft shadows)
 
 Configuration:
-- Copy .env.example to .env and set REACT_APP_BACKEND_URL to your FastAPI service URL.
+- Copy .env.example to .env and set REACT_APP_BACKEND_URL to your FastAPI service URL (no trailing slash).
+  If the frontend is served over HTTPS, ensure the backend URL also uses HTTPS to avoid mixed-content/CORS errors.
 
 Scripts:
 - npm start

@@ -42,7 +42,10 @@ export default function Header({ onSearch }) {
               <button className="btn secondary" onClick={logout}>Logout</button>
             </>
           ) : (
-            <a className="btn secondary" href="/login">Login</a>
+            <>
+              <a className="btn secondary" href="/login">Login</a>
+              <a className="btn" href="/register" style={{ textDecoration: "none" }}>Sign up</a>
+            </>
           )}
         </div>
       </div>

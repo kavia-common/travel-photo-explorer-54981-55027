@@ -59,6 +59,12 @@ export const api = {
     return request("/auth/me", { token });
   },
 
+  /** Register a new user account and return AuthResponse */
+  // PUBLIC_INTERFACE
+  async register(email, password, name) {
+    return request("/auth/register", { method: "POST", body: { email, password, name: name || null } });
+  },
+
   /** List my photos (optional location filter) */
   // PUBLIC_INTERFACE
   async listMyPhotos(token, location) {

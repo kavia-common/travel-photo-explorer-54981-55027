@@ -3,13 +3,16 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 // PUBLIC_INTERFACE
-export default function LoginPage() {
-  /** Login page for user authentication. */
-  const { login } = useAuth();
+export default function RegisterPage() {
+  /** Registration page for creating a new user account. On success, auto-logs in and redirects to prior page or home. */
+  const { register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -17,13 +20,21 @@ export default function LoginPage() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
     setError("");
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+    if (password !== confirm) {
+      setError("Passwords do not match.");
+      return;
+    }
     try {
-      await login(email, password);
+      setSubmitting(true);
+      await register(email, password, name.trim() || null);
       navigate(from, { replace: true });
-    } catch (e) {
-      setError(e.message || "Login failed");
+    } catch (e2) {
+      setError(e2.message || "Registration failed");
     } finally {
       setSubmitting(false);
     }
@@ -31,12 +42,25 @@ export default function LoginPage() {
 
   return (
     <div className="auth-card" role="main">
-      <h2 className="auth-title">Welcome back</h2>
-      <div className="auth-subtitle">Sign in to view your travel photo collection.</div>
+      <h2 className="auth-title">Create your account</h2>
+      <div className="auth-subtitle">Join to save and search your travel photos.</div>
 
       {error && <div className="error" role="alert">{error}</div>}
 
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} noValidate>
+        <div className="form-row">
+          <label htmlFor="name">Name (optional)</label>
+          <input
+            className="input"
+            id="name"
+            type="text"
+            placeholder="Jane Doe"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            autoComplete="name"
+          />
+        </div>
+
         <div className="form-row">
           <label htmlFor="email">Email</label>
           <input
@@ -51,26 +75,45 @@ export default function LoginPage() {
             aria-required="true"
           />
         </div>
+
         <div className="form-row">
           <label htmlFor="password">Password</label>
           <input
             className="input"
             id="password"
             type="password"
-            autoComplete="current-password"
+            autoComplete="new-password"
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             aria-required="true"
+            minLength={6}
           />
         </div>
+
+        <div className="form-row">
+          <label htmlFor="confirm">Confirm password</label>
+          <input
+            className="input"
+            id="confirm"
+            type="password"
+            autoComplete="new-password"
+            placeholder="••••••••"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            required
+            aria-required="true"
+            minLength={6}
+          />
+        </div>
+
         <div style={{ display: "flex", gap: 10, marginTop: 10, alignItems: "center", flexWrap: "wrap" }}>
           <button className="btn" type="submit" disabled={submitting}>
-            {submitting ? "Signing in..." : "Sign in"}
+            {submitting ? "Creating account..." : "Create account"}
           </button>
-          <Link className="btn secondary" to="/register" state={{ from }}>
-            Create an account
+          <Link className="btn secondary" to="/login" state={{ from }}>
+            I already have an account
           </Link>
           <a className="btn secondary" href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
             Cancel

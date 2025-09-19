@@ -2,6 +2,7 @@
 
 This React app implements:
 - Login (email/password) via FastAPI backend
+- Registration (sign up) via FastAPI backend
 - Header with brand, navigation, and location search
 - Responsive photo grid for your photos and Unsplash images
 - Ocean Professional theme (blue primary, amber secondary, rounded corners, soft shadows)
@@ -15,6 +16,6 @@ Scripts:
 - npm run build
 
 Notes:
-- Login hits POST /auth/login, profile via GET /auth/me
+- Registration hits POST /auth/register, Login hits POST /auth/login, profile via GET /auth/me
 - My photos via GET /photos?location=...
 - Search Unsplash via GET /unsplash/search?query=...

@@ -6,6 +6,8 @@ export const AuthContext = createContext({
   user: null,
   token: null,
   login: async (_email, _password) => {},
+  // PUBLIC_INTERFACE
+  register: async (_email, _password, _name) => {},
   logout: () => {},
   ready: false,
 });
@@ -47,13 +49,21 @@ export function AuthProvider({ children }) {
     return data.user;
   };
 
+  const register = async (email, password, name) => {
+    const data = await api.register(email, password, name);
+    setToken(data.access_token);
+    localStorage.setItem("tp_token", data.access_token);
+    setUser(data.user);
+    return data.user;
+  };
+
   const logout = () => {
     localStorage.removeItem("tp_token");
     setToken(null);
     setUser(null);
   };
 
-  const value = useMemo(() => ({ user, token, login, logout, ready }), [user, token, ready]);
+  const value = useMemo(() => ({ user, token, login, register, logout, ready }), [user, token, ready]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
